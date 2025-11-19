@@ -120,7 +120,7 @@
     <build>
         <plugins>
 
-            <!-- Compilador Java 17 -->
+            <!-- Compilador Java -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -132,14 +132,22 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin Spring Boot -->
+            <!-- Plugin Spring Boot (repackage activo) -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>
     </build>
+
 
 </project>
