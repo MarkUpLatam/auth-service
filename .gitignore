@@ -3,6 +3,16 @@ HELP.md
 target/
 **/target/
 
+### Logs ###
+*.log
+logs/
+
+### JARs ###
+*.jar
+
+### OS ##
+.DS_Store
+Thumbs.db
 
 ### STS ###
 .apt_generated
@@ -31,3 +41,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Env files ###
+.env
