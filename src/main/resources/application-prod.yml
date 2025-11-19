@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+server:
+  port: ${PORT}
+
+cors:
+  allowed-origins: "https://markup-project-tan.vercel.app"
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 86400000

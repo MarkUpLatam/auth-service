@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/markup_auth
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  web:
+    cors:
+      allowed-origins: "http://localhost:5173,http://localhost:5174"
+      allowed-methods: "*"
+      allowed-headers: "*"
+      allow-credentials: true
+
+jwt:
+  secret: "mi-super-secret-key-para-desarrollo-con-minimo-32-caracteres-de-longitud"
+  expiration: 86400000
+
