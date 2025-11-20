@@ -4,7 +4,7 @@ spring:
     username: ${PGUSER}
     password: ${PGPASSWORD}
     cors:
-      allowed-origins: "https://auth-service-nhvh.onrender.com"
+      allowed-origins: "https://markup-landing.vercel.app/"
 
   jpa:
     hibernate:
