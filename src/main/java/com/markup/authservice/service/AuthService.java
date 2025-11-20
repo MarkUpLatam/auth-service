@@ -1,7 +1,7 @@
 package com.markup.authservice.service;
 
-import com.markup.authservice.dto.JwtResponse;
 import com.markup.authservice.dto.LoginRequest;
+import com.markup.authservice.dto.LoginResponse;
 import com.markup.authservice.dto.RegisterRequest;
 import com.markup.authservice.entity.User;
 import com.markup.authservice.repository.UserRepository;
@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,19 +23,18 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public JwtResponse register(RegisterRequest request) {
+    // ========================= REGISTER =========================
 
-        // Verificar si el email ya está registrado
+    public String register(RegisterRequest request) {
+
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new RuntimeException("El correo ya está registrado.");
         }
 
-        // Verificar si la identificación ya existe
         if (userRepository.existsByIdentification(request.getIdentification())) {
             throw new RuntimeException("La identificación ya está registrada.");
         }
 
-        // Crear usuario con todos los campos
         User user = new User();
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
@@ -52,27 +50,37 @@ public class AuthService {
         user.setRegistrationDate(LocalDateTime.now());
         user.setRequestType(request.getRequestType());
 
-        // Guardar en la base de datos
         userRepository.save(user);
 
-        // Generar token JWT
-        String token = jwtService.generateToken(user);
-        return new JwtResponse(token);
+        return "Usuario registrado exitosamente";
     }
 
-    public JwtResponse login(LoginRequest request) {
+    // ========================= LOGIN =========================
+
+    public LoginResponse login(LoginRequest request) {
+
         Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
         );
+
         User user = (User) auth.getPrincipal();
-        String jwt = jwtService.generateToken(user);
-        return new JwtResponse(jwt);
-    }
 
-    public List<String> getAllUserEmails() {
-        return userRepository.findAll().stream()
-                .map(User::getEmail)
-                .toList();
-    }
+        String token = jwtService.generateToken(user);
 
+        LoginResponse response = new LoginResponse();
+        response.setToken(token);
+
+        LoginResponse.UserData userData = new LoginResponse.UserData();
+        userData.setId(user.getId());
+        userData.setEmail(user.getEmail());
+        userData.setName(user.getFirstName() + " " + user.getLastName());
+        userData.setRole(user.getRole().name().toLowerCase());
+
+        response.setUser(userData);
+
+        return response;
+    }
 }
