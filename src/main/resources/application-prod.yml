@@ -13,6 +13,7 @@ spring:
     cors:
       allowed-origins:
         - "https://markup-landing.vercel.app"
+        - "https://dinerup-app.vercel.app/"
         - "http://localhost:5173"
         - "http://localhost:5174"
       allowed-methods: "*"
