@@ -11,7 +11,10 @@ spring:
 
   web:
     cors:
-      allowed-origins: "https://markup-landing.vercel.app,https://markup-project-tan.vercel.app"
+      allowed-origins:
+        - "https://markup-landing.vercel.app"
+        - "http://localhost:5173"
+        - "http://localhost:5174"
       allowed-methods: "*"
       allowed-headers: "*"
       allow-credentials: true
