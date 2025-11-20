@@ -4,6 +4,7 @@ import com.markup.authservice.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -24,7 +25,6 @@ public class SecurityConfig {
     private final CustomUserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
-    // Public endpoints (no authentication required)
     private static final String[] PUBLIC_ENDPOINTS = {
             "/api/auth/register",
             "/api/auth/login",
@@ -36,28 +36,35 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                // Disable CSRF for stateless APIs
+        http
+                // Desactivar CSRF en APIs stateless
                 .csrf(AbstractHttpConfigurer::disable)
 
-                // Authorization rules
+                // MUY IMPORTANTE: usar la config CORS (CorsConfig)
+                .cors(cors -> {}) // usa el WebMvcConfigurer que ya definiste
+
+                .sessionManagement(sess ->
+                        sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+
                 .authorizeHttpRequests(auth -> auth
+                        // Permitir TODOS los OPTIONS (preflight)
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // Endpoints públicos
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+
+                        // El resto requiere autenticación
                         .anyRequest().authenticated()
                 )
 
-                // Use JWT (stateless)
-                .sessionManagement(sess -> sess
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-
-                // Authentication provider
+                // Provider para UserDetailsService + PasswordEncoder
                 .authenticationProvider(authenticationProvider())
 
-                // Add JWT filter before UsernamePasswordAuthenticationFilter
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                // Filtro JWT antes del filtro de username/password
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-                .build();
+        return http.build();
     }
 
     @Bean
