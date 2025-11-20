@@ -1,23 +1,23 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
-    username: ${PGUSER}
-    password: ${PGPASSWORD}
-
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
     show-sql: false
+
+  web:
+    cors:
+      allowed-origins: "https://markup-landing.vercel.app,https://markup-project-tan.vercel.app"
+      allowed-methods: "*"
+      allowed-headers: "*"
+      allow-credentials: true
 
 server:
   port: ${PORT}
-
-cors:
-  allowed-origins: "https://markup-landing.vercel.app,https://markup-project-tan.vercel.app"
-  allowed-methods: "*"
-  allowed-headers: "*"
-  allow-credentials: true
 
 jwt:
   secret: ${JWT_SECRET}
