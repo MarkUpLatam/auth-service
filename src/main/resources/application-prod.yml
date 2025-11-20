@@ -3,6 +3,8 @@ spring:
     url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
     username: ${PGUSER}
     password: ${PGPASSWORD}
+    cors:
+      allowed-origins: "https://auth-service-nhvh.onrender.com"
 
   jpa:
     hibernate:
@@ -12,8 +14,6 @@ spring:
 server:
   port: ${PORT}
 
-cors:
-  allowed-origins: "https://markup-project-tan.vercel.app"
 
 jwt:
   secret: ${JWT_SECRET}
