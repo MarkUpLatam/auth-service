@@ -1,5 +1,6 @@
 package com.markup.authservice.service;
 
+import com.markup.authservice.dto.JwtResponse;
 import com.markup.authservice.dto.LoginRequest;
 import com.markup.authservice.dto.LoginResponse;
 import com.markup.authservice.dto.RegisterRequest;
@@ -25,7 +26,7 @@ public class AuthService {
 
     // ========================= REGISTER =========================
 
-    public String register(RegisterRequest request) {
+    public JwtResponse register(RegisterRequest request) {
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new RuntimeException("El correo ya está registrado.");
@@ -52,8 +53,14 @@ public class AuthService {
 
         userRepository.save(user);
 
-        return "Usuario registrado exitosamente";
+        String token = jwtService.generateToken(user);
+
+        return JwtResponse.builder()
+                .token(token)
+                .message("Usuario registrado exitosamente")
+                .build();
     }
+
 
     // ========================= LOGIN =========================
 
