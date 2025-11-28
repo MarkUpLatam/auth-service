@@ -18,6 +18,10 @@ spring:
         - "https://markup-landing.vercel.app"
         - "https://dinerup-app.vercel.app/"
 
+notification:
+  service:
+    url: http://localhost:8084/api/notifications
+
 jwt:
   secret: "mi-super-secret-key-para-desarrollo-con-minimo-32-caracteres-de-longitud"
   expiration: 86400000
